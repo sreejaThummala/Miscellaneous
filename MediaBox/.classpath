@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.7"/>
+	<classpathentry kind="con" path="com.android.ide.eclipse.adt.ANDROID_FRAMEWORK"/>
+	<classpathentry exported="true" kind="con" path="com.android.ide.eclipse.adt.LIBRARIES"/>
+	<classpathentry exported="true" kind="con" path="com.android.ide.eclipse.adt.DEPENDENCIES"/>
+	<classpathentry kind="src" path="src"/>
+	<classpathentry kind="src" path="gen"/>
+	<classpathentry kind="lib" path="/home/sreejat/Downloads/urlimageviewhelper-1.0.4.jar"/>
+	<classpathentry kind="lib" path="/home/sreejat/Downloads/cling-support-2.0-alpha2.jar"/>
+	<classpathentry kind="lib" path="/home/sreejat/Downloads/cling-core-2.0.1.jar"/>
+	<classpathentry kind="lib" path="/home/sreejat/Downloads/seamless-http-1.1.0.jar"/>
+	<classpathentry kind="lib" path="/home/sreejat/Downloads/cling-kernel.jar"/>
+	<classpathentry kind="output" path="bin/classes"/>
+</classpath>
