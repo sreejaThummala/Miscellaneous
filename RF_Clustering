@@ -1,0 +1,63 @@
+# This script creates a sample submission using the combination of Random Forests and clustering (kmeans with 4 centers)
+library(randomForest)
+
+
+Ttrain <- read.csv("../input/train.csv")
+Ttest  <- read.csv("../input/test.csv")
+
+For_clustering=rbind(Ttrain[,2:94],Ttest[,2:94])
+#clustering 
+K_means=kmeans(For_clustering,4)
+#table(K_means$cluster)
+n0=nrow(Ttrain)
+N0=nrow(Ttest)
+Ttrain$cluster=K_means$cluster[1:n0]
+Ttest$cluster =K_means$cluster[(n0+1):(N0+n0)]
+NN0=length(table(Ttrain$cluster))
+#cleating clustered training and testing sets
+train_cl=list()
+test_cl=list()
+for (i in 1:NN0){
+  test_cl[[i]]=  subset(Ttest,cluster==i)
+  train_cl[[i]]= subset(Ttrain,cluster==i)
+}
+
+
+i1=min(which(Ttrain$target=="Class_1"))
+i2=min(which(Ttrain$target=="Class_2"))
+i3=min(which(Ttrain$target=="Class_3"))
+i4=min(which(Ttrain$target=="Class_4"))
+i5=min(which(Ttrain$target=="Class_5"))
+i6=min(which(Ttrain$target=="Class_6"))
+i7=min(which(Ttrain$target=="Class_7"))
+i8=min(which(Ttrain$target=="Class_8"))
+i9=min(which(Ttrain$target=="Class_9"))
+#Ensuring that all of subsets will have all of the classes:Class_1...Class_9
+A2=Ttrain[c(i1,i2,i3,i4,i5,i6,i7,i8,i9),]
+#A2[,1]=c(123456789,123456789,123456789,123456789,123456789)
+for (i in 1:NN0){
+  train_cl[[i]]= rbind(train_cl[[i]],A2)
+}
+
+Random_CL=list()
+submissionz=list()
+#Random forests applied on all of the clusters
+for (i in 1:NN0){
+  
+  train= train_cl[[i]]
+  test = test_cl[[i]]
+  rf <- randomForest(train[,c(-1,-95,-96)], as.factor(train$target), ntree=25, importance=TRUE)
+  print(i)
+  print(rf)
+  Random_CL[[i]]=rf
+  submissionz[[i]] <- data.frame(id=test$id, Class_1=NA, Class_2=NA, Class_3=NA, Class_4=NA, Class_5=NA, Class_6=NA, Class_7=NA, Class_8=NA, Class_9=NA)
+  submissionz[[i]][,2:10] <- (predict(rf, test[,-1,-95], type="prob")+0.01)/1.09
+}
+Submission=rbind(submissionz[[1]],submissionz[[2]],submissionz[[3]],submissionz[[4]])
+submission <- data.frame(id=Ttest$id, Class_1=NA, Class_2=NA, Class_3=NA, Class_4=NA, Class_5=NA, Class_6=NA, Class_7=NA, Class_8=NA, Class_9=NA)
+submission[,2:10] <- (predict(rf, Ttest[,-1], type="prob")+0.01)/1.09
+Submission=Submission[order(Submission$id),]
+#Sending the results
+write_csv(Submission,"submiti1.csv",row.names=FALSE)
+
+#This approach has enabled me to get 0.63985 which is an improvement in comparison to pure random forest. 
